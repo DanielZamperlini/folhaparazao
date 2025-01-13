@@ -8,7 +8,7 @@ const GAME_NAMES = [
   'PT',
   'PTV',
   'CORUJINHA/FEDERAL',
-  'CORUJÃO'
+  'CORUJÃO',
 ];
 
 interface DayModalProps {
@@ -19,17 +19,24 @@ interface DayModalProps {
   onSave: (data: DayData) => void;
 }
 
-export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps) {
+export function DayModal({
+  isOpen,
+  onClose,
+  date,
+  data,
+  onSave,
+}: DayModalProps) {
   const [games, setGames] = useState<GameEntry[]>(
-    data?.games || GAME_NAMES.map(name => ({ 
-      time: '', 
-      name,
-      value: 0, 
-      profit: 0, 
-      prizeValue: 0,
-      remaining: 0, 
-      hadPrize: false 
-    }))
+    data?.games ||
+      GAME_NAMES.map((name) => ({
+        time: '',
+        name,
+        value: 0,
+        profit: 0,
+        prizeValue: 0,
+        remaining: 0,
+        hadPrize: false,
+      })),
   );
   const [advance, setAdvance] = useState(data?.advance || 0);
   const [bossGames, setBossGames] = useState(data?.bossGames || 0);
@@ -40,21 +47,29 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
       setAdvance(data.advance);
       setBossGames(data.bossGames);
     } else {
-      setGames(GAME_NAMES.map(name => ({ 
-        time: '', 
-        name,
-        value: 0, 
-        profit: 0, 
-        prizeValue: 0,
-        remaining: 0, 
-        hadPrize: false 
-      })));
+      setGames(
+        GAME_NAMES.map((name) => ({
+          time: '',
+          name,
+          value: 0,
+          profit: 0,
+          prizeValue: 0,
+          remaining: 0,
+          hadPrize: false,
+        })),
+      );
       setAdvance(0);
       setBossGames(0);
     }
   }, [data]);
 
-  const handleGameChange = (index: number, field: keyof GameEntry, value: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleGameChange = (
+    index: number,
+    field: keyof GameEntry,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value: any,
+  ) => {
     const newGames = [...games];
     if (field === 'value') {
       const gameValue = Number(value);
@@ -62,15 +77,15 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
         ...newGames[index],
         value: gameValue,
         profit: gameValue * 0.2,
-        remaining: gameValue * 0.8 - (newGames[index].prizeValue || 0)
+        remaining: gameValue * 0.8 - (newGames[index].prizeValue || 0),
       };
     } else if (field === 'prizeValue') {
       const prizeValue = Number(value);
       newGames[index] = {
         ...newGames[index],
         prizeValue,
-        remaining: (newGames[index].value * 0.8) - prizeValue,
-        hadPrize: prizeValue > 0
+        remaining: newGames[index].value * 0.8 - prizeValue,
+        hadPrize: prizeValue > 0,
       };
     } else {
       newGames[index] = { ...newGames[index], [field]: value };
@@ -79,21 +94,27 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
   };
 
   const calculateFinalBalance = () => {
-    const totalRemaining = games.reduce((sum, game) => sum + (game.remaining || 0), 0);
+    const totalRemaining = games.reduce(
+      (sum, game) => sum + (game.remaining || 0),
+      0,
+    );
     return totalRemaining - advance - bossGames;
   };
 
   const handleSave = () => {
-    const totalEarnings = games.reduce((sum, game) => sum + (game.profit || 0), 0);
+    const totalEarnings = games.reduce(
+      (sum, game) => sum + (game.profit || 0),
+      0,
+    );
     const balance = calculateFinalBalance();
-    
+
     onSave({
       date: date.toISOString().split('T')[0],
       games,
       advance,
       bossGames,
       totalEarnings,
-      balance
+      balance,
     });
     onClose();
   };
@@ -102,7 +123,7 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-4xl">
+      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
             {date.toLocaleDateString('pt-BR', { dateStyle: 'long' })}
@@ -122,12 +143,14 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
           </div>
 
           {games.map((game, index) => (
-            <div key={index} className="grid grid-cols-5 gap-4">
+            <div key={index} className="grid grid-cols-5 gap-2">
               <div className="p-2 font-medium">{game.name}</div>
               <input
                 type="number"
                 value={game.value || ''}
-                onChange={(e) => handleGameChange(index, 'value', e.target.value)}
+                onChange={(e) =>
+                  handleGameChange(index, 'value', e.target.value)
+                }
                 className="border rounded p-2"
                 placeholder="Valor"
               />
@@ -137,7 +160,9 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
               <input
                 type="number"
                 value={game.prizeValue || ''}
-                onChange={(e) => handleGameChange(index, 'prizeValue', e.target.value)}
+                onChange={(e) =>
+                  handleGameChange(index, 'prizeValue', e.target.value)
+                }
                 className="border rounded p-2"
                 placeholder="Valor do Prêmio"
               />
@@ -158,15 +183,15 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
                 placeholder="Valor do adiantamento"
               />
             </div>
-            
-            <div className="flex items-center gap-4">
-              <label className="font-medium">Jogos do Chefe:</label>
+
+            <div className="flex items-center gap-2">
+              <label className="font-medium">Jogos do Loro:</label>
               <input
                 type="number"
                 value={bossGames}
                 onChange={(e) => setBossGames(Number(e.target.value))}
                 className="border rounded p-2"
-                placeholder="Valor dos jogos do chefe"
+                placeholder="Valor dos jogos do Loro"
               />
             </div>
           </div>
@@ -176,11 +201,14 @@ export function DayModal({ isOpen, onClose, date, data, onSave }: DayModalProps)
               <div>
                 <span className="font-medium">Total de Lucro:</span>
                 <div className="text-lg">
-                  R$ {games.reduce((sum, game) => sum + (game.profit || 0), 0).toFixed(2)}
+                  R${' '}
+                  {games
+                    .reduce((sum, game) => sum + (game.profit || 0), 0)
+                    .toFixed(2)}
                 </div>
               </div>
               <div>
-                <span className="font-medium">Saldo Final (Retorno - Adiantamento - Jogos do Chefe):</span>
+                <span className="font-medium">Saldo Final (Retorno):</span>
                 <div className="text-lg">
                   R$ {calculateFinalBalance().toFixed(2)}
                 </div>

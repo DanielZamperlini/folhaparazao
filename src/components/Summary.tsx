@@ -8,19 +8,23 @@ interface SummaryProps {
 export function Summary({ monthData }: SummaryProps) {
   const getMonthlyData = () => {
     const monthlyTotals: { [key: string]: number } = {};
-    
+
     Object.entries(monthData).forEach(([date, data]) => {
       const [year, month] = date.split('-');
       const monthKey = `${year}-${month}`;
-      monthlyTotals[monthKey] = (monthlyTotals[monthKey] || 0) + data.totalEarnings;
+      monthlyTotals[monthKey] =
+        (monthlyTotals[monthKey] || 0) + data.totalEarnings;
     });
-    
+
     return monthlyTotals;
   };
 
   const calculateTotalReturn = () => {
     return Object.values(monthData).reduce((total, data) => {
-      const remaining = data.games.reduce((sum, game) => sum + (game.remaining || 0), 0);
+      const remaining = data.games.reduce(
+        (sum, game) => sum + (game.remaining || 0),
+        0,
+      );
       return total + remaining - data.advance - data.bossGames;
     }, 0);
   };
@@ -43,7 +47,9 @@ export function Summary({ monthData }: SummaryProps) {
             .sort((a, b) => b[0].localeCompare(a[0]))
             .map(([monthKey, total]) => (
               <div key={monthKey} className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-medium text-gray-600">{formatMonthName(monthKey)}</h3>
+                <h3 className="font-medium text-gray-600">
+                  {formatMonthName(monthKey)}
+                </h3>
                 <p className="text-xl font-bold text-indigo-600">
                   R$ {total.toFixed(2)}
                 </p>
@@ -58,7 +64,7 @@ export function Summary({ monthData }: SummaryProps) {
           R$ {totalReturn.toFixed(2)}
         </p>
         <p className="text-sm text-gray-500">
-          (Soma de todos os retornos - adiantamentos - jogos do chefe)
+          (Soma de todos os retornos - adiantamentos - jogos do Loro)
         </p>
       </div>
     </div>
