@@ -78,10 +78,10 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-green-900 p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-1xl font-bold text-gray-800 flex items-center gap-2">
+          <h1 className="text-1xl font-bold text-white flex items-center gap-2">
             Controle de Jogos
             <Clover className="w-6 h-6 text-green-600" />
           </h1>
