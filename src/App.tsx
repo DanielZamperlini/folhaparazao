@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar } from './components/Calendar';
 import { DayModal } from './components/DayModal';
 import { Summary } from './components/Summary';
-import { Clover } from 'lucide-react';
+import { Clover, PiggyBank } from 'lucide-react';
 import { DayData, MonthData } from './types';
 
 function App() {
@@ -38,11 +38,12 @@ function App() {
 
   if (showProfits) {
     return (
-      <div className="min-h-screen bg-gray-100 p-8">
+      <div className="min-h-screen bg-green-900 p-8">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-white flex items-center gap-2">
               Lucros Mensais
+              <PiggyBank className="w-9 h-9 text-green-400" />
             </h1>
             <button
               onClick={() => setShowProfits(false)}

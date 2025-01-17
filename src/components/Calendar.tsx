@@ -8,29 +8,41 @@ interface CalendarProps {
   monthData: Record<string, DayData>;
 }
 
-export function Calendar({ selectedDate, onDateSelect, monthData }: CalendarProps) {
+export function Calendar({
+  selectedDate,
+  onDateSelect,
+  monthData,
+}: CalendarProps) {
   const daysInMonth = new Date(
     selectedDate.getFullYear(),
     selectedDate.getMonth() + 1,
-    0
+    0,
   ).getDate();
 
   const firstDayOfMonth = new Date(
     selectedDate.getFullYear(),
     selectedDate.getMonth(),
-    1
+    1,
   ).getDay();
 
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfMonth }, (_, i) => i);
 
   const formatDateKey = (day: number) => {
-    const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+    const date = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      day,
+    );
     return date.toISOString().split('T')[0];
   };
 
   const handleMonthChange = (increment: number) => {
-    const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + increment, 1);
+    const newDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + increment,
+      1,
+    );
     onDateSelect(newDate, false);
   };
 
@@ -39,7 +51,10 @@ export function Calendar({ selectedDate, onDateSelect, monthData }: CalendarProp
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <CalendarIcon className="w-5 h-5" />
-          {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          {selectedDate.toLocaleString('default', {
+            month: 'long',
+            year: 'numeric',
+          })}
         </h2>
         <div className="flex gap-2">
           <button
@@ -79,7 +94,11 @@ export function Calendar({ selectedDate, onDateSelect, monthData }: CalendarProp
               key={day}
               onClick={(e) => {
                 e.preventDefault();
-                const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+                const newDate = new Date(
+                  selectedDate.getFullYear(),
+                  selectedDate.getMonth(),
+                  day,
+                );
                 onDateSelect(newDate, true);
               }}
               className={`p-2 rounded hover:bg-blue-50 relative ${
