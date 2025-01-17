@@ -129,7 +129,7 @@ export function DayModal({
             {date.toLocaleDateString('pt-BR', { dateStyle: 'long' })}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded">
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 text-red-600" />
           </button>
         </div>
 
@@ -219,7 +219,7 @@ export function DayModal({
           <div className="flex justify-end">
             <button
               onClick={handleSave}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Salvar
             </button>

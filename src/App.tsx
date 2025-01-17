@@ -90,7 +90,7 @@ function App() {
             onClick={() => setShowProfits(true)}
             className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 flex items-center gap-2"
           >
-            Ver Lucros Mensais
+            Lucros Mensais
           </button>
         </div>
 
