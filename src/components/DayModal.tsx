@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import { DayData, GameEntry } from '../types';
+import {
+  DayData,
+  GameEntry,
+  formatCurrency,
+  parseCurrencyInput,
+} from '../types';
 
 const GAME_NAMES = [
   'PPT',
@@ -40,12 +45,15 @@ export function DayModal({
   );
   const [advance, setAdvance] = useState(data?.advance || 0);
   const [bossGames, setBossGames] = useState(data?.bossGames || 0);
+  const [receivedValue, setReceivedValue] = useState(data?.receivedValue || 0);
+  const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (data) {
       setGames(data.games);
       setAdvance(data.advance);
       setBossGames(data.bossGames);
+      setReceivedValue(data.receivedValue || 0);
     } else {
       setGames(
         GAME_NAMES.map((name) => ({
@@ -60,37 +68,78 @@ export function DayModal({
       );
       setAdvance(0);
       setBossGames(0);
+      setReceivedValue(0);
     }
   }, [data]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleGameChange = (
     index: number,
     field: keyof GameEntry,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any,
+    value: string,
+    blur: boolean = false,
   ) => {
     const newGames = [...games];
+    const numericValue = parseCurrencyInput(value);
+
     if (field === 'value') {
-      const gameValue = Number(value);
       newGames[index] = {
         ...newGames[index],
-        value: gameValue,
-        profit: gameValue * 0.2,
-        remaining: gameValue * 0.8 - (newGames[index].prizeValue || 0),
+        value: numericValue,
+        profit: numericValue * 0.2,
+        remaining: numericValue * 0.8 - (newGames[index].prizeValue || 0),
       };
     } else if (field === 'prizeValue') {
-      const prizeValue = Number(value);
       newGames[index] = {
         ...newGames[index],
-        prizeValue,
-        remaining: newGames[index].value * 0.8 - prizeValue,
-        hadPrize: prizeValue > 0,
+        prizeValue: numericValue,
+        remaining: newGames[index].value * 0.8 - numericValue,
+        hadPrize: numericValue > 0,
       };
-    } else {
-      newGames[index] = { ...newGames[index], [field]: value };
     }
+
     setGames(newGames);
+
+    if (blur) {
+      setInputValues((prev) => ({
+        ...prev,
+        [`${index}-${field}`]: formatCurrency(numericValue),
+      }));
+    } else {
+      setInputValues((prev) => ({
+        ...prev,
+        [`${index}-${field}`]: value,
+      }));
+    }
+  };
+
+  const handleInputBlur = (
+    type: 'advance' | 'bossGames' | 'receivedValue',
+    value: string,
+  ) => {
+    const numericValue = parseCurrencyInput(value);
+    switch (type) {
+      case 'advance':
+        setAdvance(numericValue);
+        setInputValues((prev) => ({
+          ...prev,
+          advance: formatCurrency(numericValue),
+        }));
+        break;
+      case 'bossGames':
+        setBossGames(numericValue);
+        setInputValues((prev) => ({
+          ...prev,
+          bossGames: formatCurrency(numericValue),
+        }));
+        break;
+      case 'receivedValue':
+        setReceivedValue(numericValue);
+        setInputValues((prev) => ({
+          ...prev,
+          receivedValue: formatCurrency(numericValue),
+        }));
+        break;
+    }
   };
 
   const calculateFinalBalance = () => {
@@ -98,7 +147,7 @@ export function DayModal({
       (sum, game) => sum + (game.remaining || 0),
       0,
     );
-    return totalRemaining - advance - bossGames;
+    return totalRemaining - advance - bossGames + receivedValue;
   };
 
   const handleSave = () => {
@@ -113,6 +162,7 @@ export function DayModal({
       games,
       advance,
       bossGames,
+      receivedValue,
       totalEarnings,
       balance,
     });
@@ -146,28 +196,40 @@ export function DayModal({
             <div key={index} className="grid grid-cols-5 gap-2">
               <div className="p-2 font-medium">{game.name}</div>
               <input
-                type="number"
-                value={game.value || ''}
+                type="text"
+                value={
+                  inputValues[`${index}-value`] ||
+                  (game.value ? formatCurrency(game.value) : '')
+                }
                 onChange={(e) =>
                   handleGameChange(index, 'value', e.target.value)
+                }
+                onBlur={(e) =>
+                  handleGameChange(index, 'value', e.target.value, true)
                 }
                 className="border rounded p-2"
                 placeholder="Valor"
               />
               <div className="p-2 bg-gray-50 rounded">
-                R$ {game.profit?.toFixed(2)}
+                {formatCurrency(game.profit || 0)}
               </div>
               <input
-                type="number"
-                value={game.prizeValue || ''}
+                type="text"
+                value={
+                  inputValues[`${index}-prizeValue`] ||
+                  (game.prizeValue ? formatCurrency(game.prizeValue) : '')
+                }
                 onChange={(e) =>
                   handleGameChange(index, 'prizeValue', e.target.value)
+                }
+                onBlur={(e) =>
+                  handleGameChange(index, 'prizeValue', e.target.value, true)
                 }
                 className="border rounded p-2"
                 placeholder="Valor do Prêmio"
               />
               <div className="p-2 bg-gray-50 rounded">
-                R$ {game.remaining?.toFixed(2)}
+                {formatCurrency(game.remaining || 0)}
               </div>
             </div>
           ))}
@@ -176,22 +238,60 @@ export function DayModal({
             <div className="flex items-center gap-4">
               <label className="font-medium">Adiantamento:</label>
               <input
-                type="number"
-                value={advance}
-                onChange={(e) => setAdvance(Number(e.target.value))}
+                type="text"
+                value={
+                  inputValues.advance ||
+                  (advance ? formatCurrency(advance) : '')
+                }
+                onChange={(e) =>
+                  setInputValues((prev) => ({
+                    ...prev,
+                    advance: e.target.value,
+                  }))
+                }
+                onBlur={(e) => handleInputBlur('advance', e.target.value)}
                 className="border rounded p-2"
                 placeholder="Valor do adiantamento"
               />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <label className="font-medium">Jogos do Loro:</label>
               <input
-                type="number"
-                value={bossGames}
-                onChange={(e) => setBossGames(Number(e.target.value))}
+                type="text"
+                value={
+                  inputValues.bossGames ||
+                  (bossGames ? formatCurrency(bossGames) : '')
+                }
+                onChange={(e) =>
+                  setInputValues((prev) => ({
+                    ...prev,
+                    bossGames: e.target.value,
+                  }))
+                }
+                onBlur={(e) => handleInputBlur('bossGames', e.target.value)}
                 className="border rounded p-2"
                 placeholder="Valor dos jogos do Loro"
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="font-medium">Valor Recebido:</label>
+              <input
+                type="text"
+                value={
+                  inputValues.receivedValue ||
+                  (receivedValue ? formatCurrency(receivedValue) : '')
+                }
+                onChange={(e) =>
+                  setInputValues((prev) => ({
+                    ...prev,
+                    receivedValue: e.target.value,
+                  }))
+                }
+                onBlur={(e) => handleInputBlur('receivedValue', e.target.value)}
+                className="border rounded p-2"
+                placeholder="Valor recebido"
               />
             </div>
           </div>
@@ -201,16 +301,18 @@ export function DayModal({
               <div>
                 <span className="font-medium">Total de Lucro:</span>
                 <div className="text-lg">
-                  R${' '}
-                  {games
-                    .reduce((sum, game) => sum + (game.profit || 0), 0)
-                    .toFixed(2)}
+                  {formatCurrency(
+                    games.reduce((sum, game) => sum + (game.profit || 0), 0),
+                  )}
                 </div>
               </div>
               <div>
-                <span className="font-medium">Saldo Final (Retorno):</span>
+                <span className="font-medium">
+                  Saldo Final (Retorno - Adiantamento - Jogos do Loro + Valor
+                  Recebido):
+                </span>
                 <div className="text-lg">
-                  R$ {calculateFinalBalance().toFixed(2)}
+                  {formatCurrency(calculateFinalBalance())}
                 </div>
               </div>
             </div>
