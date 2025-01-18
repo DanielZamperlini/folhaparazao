@@ -64,10 +64,10 @@ function App() {
               })
               .map(([monthKey, total]) => (
                 <div key={monthKey} className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="font-medium text-gray-600 mb-2">
+                  <h3 className="font-medium text-2xl text-gray-600 mb-2">
                     {formatMonthName(monthKey)}
                   </h3>
-                  <p className="text-1xl font-bold text-indigo-600">
+                  <p className="text-2xl font-bold text-indigo-600">
                     R$ {total.toFixed(2)}
                   </p>
                 </div>
