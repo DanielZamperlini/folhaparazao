@@ -58,9 +58,9 @@ function App() {
                 const [yearA, monthA] = a.split('-');
                 const [yearB, monthB] = b.split('-');
                 if (yearA !== yearB) {
-                  return parseInt(yearA) - parseInt(yearB);
+                  return parseInt(yearB) - parseInt(yearA); // Inverte a ordem dos anos
                 }
-                return parseInt(monthA) - parseInt(monthB);
+                return parseInt(monthB) - parseInt(monthA); // Inverte a ordem dos meses
               })
               .map(([monthKey, total]) => (
                 <div key={monthKey} className="bg-white p-6 rounded-lg shadow">
