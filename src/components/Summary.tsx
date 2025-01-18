@@ -30,10 +30,7 @@ export function Summary({ monthData }: SummaryProps) {
       <p className="text-2xl font-bold text-emerald-600">
         {formatCurrency(totalReturn)}
       </p>
-      <p className="text-sm text-gray-500">
-        (Soma de todos os retornos - adiantamentos - jogos do loro + valores
-        recebidos)
-      </p>
+      <p className="text-sm text-gray-500">(Soma de todos os retornos)</p>
     </div>
   );
 }

@@ -7,14 +7,7 @@ import {
   parseCurrencyInput,
 } from '../types';
 
-const GAME_NAMES = [
-  'PPT',
-  'CANTA GALO',
-  'PT',
-  'PTV',
-  'CORUJINHA/FEDERAL',
-  'CORUJÃO',
-];
+const GAME_NAMES = ['PPT', 'CT GALO', 'PT', 'PTV', '18h/FED', 'CORUJÃO'];
 
 interface DayModalProps {
   isOpen: boolean;
@@ -175,7 +168,7 @@ export function DayModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-2xl font-semibold">
             {date.toLocaleDateString('pt-BR', { dateStyle: 'long' })}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded">
@@ -184,7 +177,7 @@ export function DayModal({
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-5 gap-4 font-medium">
+          <div className="grid grid-cols-5 gap-4 font-medium text-sm">
             <div>Jogo</div>
             <div>Valor</div>
             <div>Lucro (20%)</div>
@@ -193,7 +186,7 @@ export function DayModal({
           </div>
 
           {games.map((game, index) => (
-            <div key={index} className="grid grid-cols-5 gap-2">
+            <div key={index} className="grid grid-cols-5 gap-1">
               <div className="p-2 font-medium">{game.name}</div>
               <input
                 type="text"
@@ -207,10 +200,10 @@ export function DayModal({
                 onBlur={(e) =>
                   handleGameChange(index, 'value', e.target.value, true)
                 }
-                className="border rounded p-2"
+                className="border rounded p-2 text-xs"
                 placeholder="Valor"
               />
-              <div className="p-2 bg-gray-50 rounded">
+              <div className="p-2 bg-gray-50 rounded text-xs">
                 {formatCurrency(game.profit || 0)}
               </div>
               <input
@@ -225,10 +218,10 @@ export function DayModal({
                 onBlur={(e) =>
                   handleGameChange(index, 'prizeValue', e.target.value, true)
                 }
-                className="border rounded p-2"
+                className="border rounded p-2 text-xs"
                 placeholder="Valor do Prêmio"
               />
-              <div className="p-2 bg-gray-50 rounded">
+              <div className="p-2 bg-gray-50 rounded text-xs">
                 {formatCurrency(game.remaining || 0)}
               </div>
             </div>
@@ -307,10 +300,7 @@ export function DayModal({
                 </div>
               </div>
               <div>
-                <span className="font-medium">
-                  Saldo Final (Retorno - Adiantamento - Jogos do Loro + Valor
-                  Recebido):
-                </span>
+                <span className="font-medium">Saldo Final (Retorno):</span>
                 <div className="text-lg">
                   {formatCurrency(calculateFinalBalance())}
                 </div>
