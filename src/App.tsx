@@ -67,7 +67,7 @@ function App() {
                   <h3 className="font-medium text-gray-600 mb-2">
                     {formatMonthName(monthKey)}
                   </h3>
-                  <p className="text-2xl font-bold text-indigo-600">
+                  <p className="text-1xl font-bold text-indigo-600">
                     R$ {total.toFixed(2)}
                   </p>
                 </div>
