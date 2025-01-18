@@ -219,7 +219,7 @@ export function DayModal({
                   handleGameChange(index, 'prizeValue', e.target.value, true)
                 }
                 className="border rounded p-2 text-xs"
-                placeholder="Valor do Prêmio"
+                placeholder="Prêmio"
               />
               <div className="p-2 bg-gray-50 rounded text-xs">
                 {formatCurrency(game.remaining || 0)}
