@@ -7,7 +7,7 @@ import {
   parseCurrencyInput,
 } from '../types';
 
-const GAME_NAMES = ['PPT', 'CT GALO', 'PT', 'PTV', '18h/FED', 'CORUJÃO'];
+const GAME_NAMES = ['PPT', 'CT Galo', 'PT', 'PTV', '18h   FED', '22hrs'];
 
 interface DayModalProps {
   isOpen: boolean;
@@ -186,7 +186,7 @@ export function DayModal({
           </div>
 
           {games.map((game, index) => (
-            <div key={index} className="grid grid-cols-5 gap-1">
+            <div key={index} className="grid grid-cols-5 gap-1 items-center">
               <div className="p-2 font-medium">{game.name}</div>
               <input
                 type="text"
