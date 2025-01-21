@@ -40,6 +40,7 @@ export function DayModal({
   const [bossGames, setBossGames] = useState(data?.bossGames || 0);
   const [receivedValue, setReceivedValue] = useState(data?.receivedValue || 0);
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+  const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
   useEffect(() => {
     if (data) {
@@ -133,6 +134,21 @@ export function DayModal({
         }));
         break;
     }
+    setFocusedInput(null);
+  };
+
+  const handleInputFocus = (inputKey: string) => {
+    setFocusedInput(inputKey);
+    setInputValues((prev) => ({
+      ...prev,
+      [inputKey]: '',
+    }));
+  };
+
+  const getInputValue = (inputKey: string, formattedValue: string) => {
+    return focusedInput === inputKey
+      ? inputValues[inputKey] || ''
+      : formattedValue;
   };
 
   const calculateFinalBalance = () => {
@@ -190,13 +206,14 @@ export function DayModal({
               <div className="p-2 font-medium">{game.name}</div>
               <input
                 type="text"
-                value={
-                  inputValues[`${index}-value`] ||
-                  (game.value ? formatCurrency(game.value) : '')
-                }
+                value={getInputValue(
+                  `${index}-value`,
+                  game.value ? formatCurrency(game.value) : '',
+                )}
                 onChange={(e) =>
                   handleGameChange(index, 'value', e.target.value)
                 }
+                onFocus={() => handleInputFocus(`${index}-value`)}
                 onBlur={(e) =>
                   handleGameChange(index, 'value', e.target.value, true)
                 }
@@ -208,13 +225,14 @@ export function DayModal({
               </div>
               <input
                 type="text"
-                value={
-                  inputValues[`${index}-prizeValue`] ||
-                  (game.prizeValue ? formatCurrency(game.prizeValue) : '')
-                }
+                value={getInputValue(
+                  `${index}-prizeValue`,
+                  game.prizeValue ? formatCurrency(game.prizeValue) : '',
+                )}
                 onChange={(e) =>
                   handleGameChange(index, 'prizeValue', e.target.value)
                 }
+                onFocus={() => handleInputFocus(`${index}-prizeValue`)}
                 onBlur={(e) =>
                   handleGameChange(index, 'prizeValue', e.target.value, true)
                 }
@@ -232,16 +250,17 @@ export function DayModal({
               <label className="font-medium">Adiantamento:</label>
               <input
                 type="text"
-                value={
-                  inputValues.advance ||
-                  (advance ? formatCurrency(advance) : '')
-                }
+                value={getInputValue(
+                  'advance',
+                  advance ? formatCurrency(advance) : '',
+                )}
                 onChange={(e) =>
                   setInputValues((prev) => ({
                     ...prev,
                     advance: e.target.value,
                   }))
                 }
+                onFocus={() => handleInputFocus('advance')}
                 onBlur={(e) => handleInputBlur('advance', e.target.value)}
                 className="border rounded p-2"
                 placeholder="Valor do adiantamento"
@@ -252,16 +271,17 @@ export function DayModal({
               <label className="font-medium">Jogos do Loro:</label>
               <input
                 type="text"
-                value={
-                  inputValues.bossGames ||
-                  (bossGames ? formatCurrency(bossGames) : '')
-                }
+                value={getInputValue(
+                  'bossGames',
+                  bossGames ? formatCurrency(bossGames) : '',
+                )}
                 onChange={(e) =>
                   setInputValues((prev) => ({
                     ...prev,
                     bossGames: e.target.value,
                   }))
                 }
+                onFocus={() => handleInputFocus('bossGames')}
                 onBlur={(e) => handleInputBlur('bossGames', e.target.value)}
                 className="border rounded p-2"
                 placeholder="Valor dos jogos do Loro"
@@ -272,16 +292,17 @@ export function DayModal({
               <label className="font-medium">Valor Recebido:</label>
               <input
                 type="text"
-                value={
-                  inputValues.receivedValue ||
-                  (receivedValue ? formatCurrency(receivedValue) : '')
-                }
+                value={getInputValue(
+                  'receivedValue',
+                  receivedValue ? formatCurrency(receivedValue) : '',
+                )}
                 onChange={(e) =>
                   setInputValues((prev) => ({
                     ...prev,
                     receivedValue: e.target.value,
                   }))
                 }
+                onFocus={() => handleInputFocus('receivedValue')}
                 onBlur={(e) => handleInputBlur('receivedValue', e.target.value)}
                 className="border rounded p-2"
                 placeholder="Valor recebido"
