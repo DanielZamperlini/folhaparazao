@@ -146,9 +146,7 @@ export function DayModal({
   };
 
   const getInputValue = (inputKey: string, formattedValue: string) => {
-    return focusedInput === inputKey
-      ? inputValues[inputKey] || ''
-      : formattedValue;
+    return focusedInput === inputKey ? inputValues[inputKey] || '' : formattedValue;
   };
 
   const calculateFinalBalance = () => {
@@ -157,6 +155,10 @@ export function DayModal({
       0,
     );
     return totalRemaining - advance - bossGames + receivedValue;
+  };
+
+  const calculateTotalReturns = () => {
+    return games.reduce((sum, game) => sum + (game.remaining || 0), 0);
   };
 
   const handleSave = () => {
@@ -244,6 +246,12 @@ export function DayModal({
               </div>
             </div>
           ))}
+
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="text-lg font-medium text-gray-700">
+              Total Retorno: {formatCurrency(calculateTotalReturns())}
+            </div>
+          </div>
 
           <div className="border-t pt-4 space-y-4">
             <div className="flex items-center gap-4">
