@@ -369,7 +369,7 @@ export function DayModal({
                 <span className="font-medium">Total de Lucro:</span>
                 <div className="text-lg">
                   {formatCurrency(
-                    games.reduce((sum, game) => sum + (game.profit || 0 ), 0) + tips,
+                    games.reduce((sum, game) => sum + (game.profit || 0 ), 0) + (tips || 0),
                   )}
                 </div>
               </div>
