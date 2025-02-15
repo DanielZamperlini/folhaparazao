@@ -161,6 +161,15 @@ export function DayModal({
     return games.reduce((sum, game) => sum + (game.remaining || 0), 0);
   };
 
+  const calculateGrossValue = () => {
+    return games.reduce((sum, game) => sum + (game.value || 0), 0);
+  };
+
+  const calculateNetValue = () => {
+    const grossValue = calculateGrossValue();
+    return grossValue * 0.8; // 80% do valor bruto (após retirar os 20%)
+  };
+
   const handleSave = () => {
     const totalEarnings = games.reduce(
       (sum, game) => sum + (game.profit || 0),
@@ -247,9 +256,13 @@ export function DayModal({
             </div>
           ))}
 
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="text-lg font-medium text-gray-700">
-              Total Retorno: {formatCurrency(calculateTotalReturns())}
+          <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+            <div className="flex justify-between items-center text-lg font-medium text-gray-700">
+              <span>Valor Bruto: {formatCurrency(calculateGrossValue())}</span>
+              <span>Valor Líquido: {formatCurrency(calculateNetValue())}</span>
+            </div>
+            <div className="text-lg font-medium text-gray-700 pt-2 border-t">
+              Total dos Retornos: {formatCurrency(calculateTotalReturns())}
             </div>
           </div>
 
