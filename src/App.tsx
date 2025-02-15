@@ -121,7 +121,7 @@ function getMonthlyData(monthData: MonthData) {
     const [year, month] = date.split('-');
     const monthKey = `${year}-${month}`;
     monthlyTotals[monthKey] =
-      (monthlyTotals[monthKey] || 0) + data.totalEarnings;
+      (monthlyTotals[monthKey] || 0) + data.totalEarnings + data.tips;
   });
 
   return monthlyTotals;

@@ -12,6 +12,7 @@ export interface DayData {
   date: string;
   games: GameEntry[];
   advance: number;
+  tips: number;
   bossGames: number;
   receivedValue: number;
   totalEarnings: number;

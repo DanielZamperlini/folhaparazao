@@ -37,6 +37,7 @@ export function DayModal({
       })),
   );
   const [advance, setAdvance] = useState(data?.advance || 0);
+  const [tips, setTips] = useState(data?.advance || 0);
   const [bossGames, setBossGames] = useState(data?.bossGames || 0);
   const [receivedValue, setReceivedValue] = useState(data?.receivedValue || 0);
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
@@ -46,6 +47,7 @@ export function DayModal({
     if (data) {
       setGames(data.games);
       setAdvance(data.advance);
+      setTips(data.tips);
       setBossGames(data.bossGames);
       setReceivedValue(data.receivedValue || 0);
     } else {
@@ -61,6 +63,7 @@ export function DayModal({
         })),
       );
       setAdvance(0);
+      setTips(0);
       setBossGames(0);
       setReceivedValue(0);
     }
@@ -107,7 +110,7 @@ export function DayModal({
   };
 
   const handleInputBlur = (
-    type: 'advance' | 'bossGames' | 'receivedValue',
+    type: 'advance' | 'bossGames' | 'receivedValue' | 'tips',
     value: string,
   ) => {
     const numericValue = parseCurrencyInput(value);
@@ -126,6 +129,13 @@ export function DayModal({
           bossGames: formatCurrency(numericValue),
         }));
         break;
+        case 'tips':
+          setTips(numericValue);
+          setInputValues((prev) => ({
+            ...prev,
+            tips: formatCurrency(numericValue),
+          }));
+          break;  
       case 'receivedValue':
         setReceivedValue(numericValue);
         setInputValues((prev) => ({
@@ -182,6 +192,7 @@ export function DayModal({
       games,
       advance,
       bossGames,
+      tips,
       receivedValue,
       totalEarnings,
       balance,
@@ -287,6 +298,27 @@ export function DayModal({
                 placeholder="Valor do adiantamento"
               />
             </div>
+            <div className="flex items-center gap-4">
+              <label className="font-medium">Gorjeta:</label>
+              <input
+                type="text"
+                value={getInputValue(
+                  'tips',
+                  tips ? formatCurrency(tips) : '',
+                )}
+                onChange={(e) =>
+                  setInputValues((prev) => ({
+                    ...prev,
+                    tips: e.target.value,
+                  }))
+                }
+                onFocus={() => handleInputFocus('tips')}
+                onBlur={(e) => handleInputBlur('tips', e.target.value)}
+                className="border rounded p-2"
+                placeholder="valor da gorjeta"
+              />
+            </div>
+
 
             <div className="flex items-center gap-4">
               <label className="font-medium">Jogos do Loro:</label>
@@ -337,7 +369,7 @@ export function DayModal({
                 <span className="font-medium">Total de Lucro:</span>
                 <div className="text-lg">
                   {formatCurrency(
-                    games.reduce((sum, game) => sum + (game.profit || 0), 0),
+                    games.reduce((sum, game) => sum + (game.profit || 0 ), 0) + tips,
                   )}
                 </div>
               </div>

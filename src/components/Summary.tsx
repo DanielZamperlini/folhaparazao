@@ -9,7 +9,7 @@ export function Summary({ monthData }: SummaryProps) {
   const calculateTotalReturn = () => {
     return Object.values(monthData).reduce((total, data) => {
       const remaining = data.games.reduce(
-        (sum, game) => sum + (game.remaining || 0),
+        (sum, game) => sum + (game.remaining || 0) ,
         0,
       );
       return (
