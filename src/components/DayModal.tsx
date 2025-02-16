@@ -295,11 +295,11 @@ export function DayModal({
                 onFocus={() => handleInputFocus('advance')}
                 onBlur={(e) => handleInputBlur('advance', e.target.value)}
                 className="border rounded p-2"
-                placeholder="Valor do adiantamento"
+                placeholder="paguei pro louro P/C"
               />
             </div>
             <div className="flex items-center gap-4">
-              <label className="font-medium">Gorjeta:</label>
+              <label className="font-medium">Gorjeta cliente:</label>
               <input
                 type="text"
                 value={getInputValue(
@@ -315,7 +315,7 @@ export function DayModal({
                 onFocus={() => handleInputFocus('tips')}
                 onBlur={(e) => handleInputBlur('tips', e.target.value)}
                 className="border rounded p-2"
-                placeholder="valor da gorjeta"
+                placeholder="valor da gorjeta de clientes"
               />
             </div>
 
@@ -358,7 +358,7 @@ export function DayModal({
                 onFocus={() => handleInputFocus('receivedValue')}
                 onBlur={(e) => handleInputBlur('receivedValue', e.target.value)}
                 className="border rounded p-2"
-                placeholder="Valor recebido"
+                placeholder="louro me pagou"
               />
             </div>
           </div>
