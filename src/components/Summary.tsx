@@ -26,7 +26,7 @@ export function Summary({ monthData }: SummaryProps) {
 
   return (
     <div className="bg-white rounded-lg shadow p-4">
-      <h2 className="text-xl font-semibold mb-2">Retorno Total</h2>
+      <h2 className="text-xl font-semibold mb-2">Retorno Total: </h2>
       <p className="text-2xl font-bold text-emerald-600">
         {formatCurrency(totalReturn)}
       </p>
